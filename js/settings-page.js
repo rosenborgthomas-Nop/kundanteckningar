@@ -147,14 +147,10 @@ form.addEventListener("submit", async (event) => {
   savePasswordBtn.disabled = true;
   try {
     await changePassword(currentInput.value, newInput.value);
-    currentInput.value = "";
-    newInput.value = "";
-    repeatInput.value = "";
-    updatePasswordFormUi();
-    showNotice("Lösenordet är bytt. Databasen är omkrypterad.", true);
+    await logOut();
+    window.location.href = "Inloggning.html";
   } catch (e) {
     showNotice(authErrorMessage(e));
-  } finally {
     updatePasswordFormUi();
   }
 });
