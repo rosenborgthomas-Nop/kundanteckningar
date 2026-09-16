@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">KundAnteckningar</string>
+    <string name="title_activity_main">KundAnteckningar</string>
+    <string name="package_name">se.omtanken.kundanteckningar</string>
+    <string name="custom_url_scheme">se.omtanken.kundanteckningar</string>
+</resources>

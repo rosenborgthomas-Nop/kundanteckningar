@@ -1,0 +1,17 @@
+{
+  "appId": "se.omtanken.kundanteckningar",
+  "appName": "KundAnteckningar",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "adjustMarginsForEdgeToEdge": "force"
+  },
+  "plugins": {
+    "CapacitorSQLite": {
+      "androidIsEncryption": true
+    }
+  }
+}
+

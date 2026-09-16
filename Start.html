@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Start — KundAnteckningar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/omtanken.css" />
+    <style>
+      .placeholder {
+        margin: 18px 0 0;
+        padding: 16px;
+        border-radius: 10px;
+        background: var(--teal-soft);
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+      .link-back {
+        display: inline-block;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: var(--teal-mid);
+        text-decoration: none;
+      }
+      .link-back:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <main class="panel">
+        <div class="panel-watermark" aria-hidden="true">
+          <img src="Resurser från hemsidan/imgi_29_Logga-1-centrum-1.png" alt="Omtanken" />
+        </div>
+
+        <div class="panel-body">
+          <h1>KundAnteckningar</h1>
+          <p class="sub">Öppna vyn för att arbeta med kunder.</p>
+          <a class="btn" href="Journal.html" style="display:block;text-align:center;text-decoration:none;margin-top:8px;">Öppna KundAnteckningar</a>
+          <div class="placeholder">
+            Härifrån når du kundregister och anteckningar.
+          </div>
+          <a class="link-back" href="#" id="logout-link">Logga ut</a>
+        </div>
+      </main>
+
+      <footer>
+        <p id="app-version-footer"></p>
+      </footer>
+    </div>
+
+    <script type="module" src="js/start-page.js"></script>
+  </body>
+</html>

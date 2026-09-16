@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Lås upp — KundAnteckningar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/omtanken.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <main class="panel panel--login">
+        <div class="panel-body">
+          <div class="clock" aria-live="polite">
+            <span class="date" id="clock-date">—</span>
+            <span class="sep" aria-hidden="true">·</span>
+            <span class="time" id="clock-time">—:—</span>
+          </div>
+
+          <div class="login-heading">
+            <h1 id="login-title">Inloggning</h1>
+            <div class="login-brand" aria-hidden="true">
+              <img
+                src="Resurser från hemsidan/imgi_29_Logga-1-centrum-1.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <p class="sub sub--spaced" aria-hidden="true">&nbsp;</p>
+
+          <p id="config-notice" class="notice notice--config" hidden></p>
+
+          <form id="login-form" novalidate>
+            <div class="field" id="email-field" hidden>
+              <label for="email">E-post</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="username"
+              />
+            </div>
+
+            <div class="field field--password">
+              <label for="password">Lösenord</label>
+              <div class="password-input-wrap">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  minlength="8"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  aria-label="Visa lösenord"
+                  aria-pressed="false"
+                  data-password-toggle
+                >
+                  <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                    <path d="M1 1l22 22"></path>
+                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="field field--password" id="repeat-field" hidden>
+              <label for="password-repeat">Repetera lösenord</label>
+              <div class="password-input-wrap">
+                <input
+                  id="password-repeat"
+                  name="password-repeat"
+                  type="password"
+                  autocomplete="new-password"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  aria-label="Visa lösenord"
+                  aria-pressed="false"
+                  data-password-toggle
+                >
+                  <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                    <path d="M1 1l22 22"></path>
+                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div id="notice" hidden></div>
+
+            <fieldset class="app-choice" id="app-choice">
+              <legend class="app-choice__legend">Vad vill du öppna?</legend>
+              <div class="app-choice__options">
+                <label class="app-choice__option">
+                  <input
+                    type="radio"
+                    name="app-destination"
+                    value="journal"
+                    checked
+                  />
+                  Anteckningar
+                </label>
+                <label class="app-choice__option app-choice__option--disabled">
+                  <input
+                    type="radio"
+                    name="app-destination"
+                    value="bokning"
+                    disabled
+                  />
+                  Bokning
+                  <span class="app-choice__soon">(kommer snart)</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="mode-switch" id="mode-switch"></div>
+
+            <button class="btn" type="submit" id="submit-btn">Lås upp</button>
+          </form>
+        </div>
+      </main>
+
+      <footer>
+        <p id="app-version-footer"></p>
+      </footer>
+    </div>
+
+    <script type="module" src="js/login-page.js"></script>
+  </body>
+</html>

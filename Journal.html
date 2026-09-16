@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>KundAnteckningar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/omtanken.css" />
+  </head>
+  <body>
+    <div class="wrap wrap--journal">
+      <header class="app-chrome">
+        <h1 class="app-chrome__title" id="app-view-title">Kundregister</h1>
+        <div class="app-menu-wrap">
+          <button
+            type="button"
+            class="menu-toggle"
+            id="menu-toggle"
+            aria-label="Öppna meny"
+            aria-expanded="false"
+            aria-controls="app-menu"
+          >
+            <span class="menu-toggle__bar" aria-hidden="true"></span>
+            <span class="menu-toggle__bar" aria-hidden="true"></span>
+            <span class="menu-toggle__bar" aria-hidden="true"></span>
+          </button>
+          <nav class="app-menu" id="app-menu" hidden>
+            <button type="button" class="app-menu__item" id="settings-link">
+              Inställningar
+            </button>
+            <button type="button" class="app-menu__item" id="logout-link">
+              Logga ut
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      <main class="panel panel--journal">
+        <p id="load-notice" class="load-notice" hidden></p>
+
+        <label class="sr-only" for="customer-select">Val av kund</label>
+        <select id="customer-select" class="customer-select" hidden aria-hidden="true" tabindex="-1">
+        </select>
+
+        <div class="view-row" id="hd-toolbar-row">
+          <p class="customer-count-label" id="customer-count-label" hidden>
+            Poster:[0]
+          </p>
+          <div class="hd-toolbar" id="hd-toolbar" hidden>
+            <button type="button" class="btn btn--compact" id="open-kundregister-btn">
+              Kundregister
+            </button>
+            <button type="button" class="btn btn--compact" id="open-contact-btn" hidden>
+              Kontaktuppgifter
+            </button>
+            <button type="button" class="btn btn--compact" id="open-notes-btn">
+              Anteckningar
+            </button>
+            <button type="button" class="btn btn--compact" id="hd-btn">
+              Hälsodeklaration
+            </button>
+          </div>
+        </div>
+
+        <div class="content-frame">
+          <section id="kundregister-list-view" class="kundregister-list-view" hidden>
+            <div class="kundregister-list-toolbar">
+              <button type="button" class="btn btn--compact" id="new-customer-btn">
+                + Ny kund
+              </button>
+            </div>
+            <div id="kundregister-list" class="kundregister-list" role="list"></div>
+            <p id="kundregister-list-empty" class="empty-state" hidden>
+              Inga kunder ännu. Tryck <strong>+ Ny kund</strong> för att lägga till den första.
+            </p>
+          </section>
+
+          <form id="kundregister-view" class="kundregister-form" hidden>
+            <div class="field-row field-row--2">
+              <div class="field">
+                <label for="field-namn">Namn <span class="required-mark" aria-hidden="true">*</span></label>
+                <input id="field-namn" name="namn" type="text" autocomplete="name" />
+                <p class="kundregister-hint" id="namn-hint" hidden></p>
+              </div>
+              <div class="field">
+                <label for="field-fodelsedata">Födelsedata</label>
+                <input id="field-fodelsedata" name="fodelsedata" type="text" placeholder="ÅÅÅÅ-MM-DD" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="field-adress">Adress</label>
+              <input id="field-adress" name="adress" type="text" autocomplete="street-address" />
+            </div>
+            <div class="field">
+              <label for="field-mobil">Mobiltelefon <span class="required-mark" aria-hidden="true">*</span></label>
+              <input
+                id="field-mobil"
+                name="mobil"
+                type="tel"
+                inputmode="tel"
+                autocomplete="tel"
+                placeholder="+46 0712 23 45 56"
+              />
+              <p class="kundregister-hint" id="mobil-hint" hidden></p>
+            </div>
+            <div class="field-row field-row--2">
+              <div class="field">
+                <label for="field-yrke">Yrke</label>
+                <input id="field-yrke" name="yrke" type="text" />
+              </div>
+              <div class="field">
+                <label for="field-epost">E-post</label>
+                <input id="field-epost" name="epost" type="email" autocomplete="email" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="field-personnummer">Personnummer (ååååmmdd-xxxx)</label>
+              <input
+                id="field-personnummer"
+                name="personnummer"
+                type="text"
+                inputmode="numeric"
+                maxlength="13"
+                placeholder="Valfritt"
+                autocomplete="off"
+              />
+              <p class="kundregister-hint" id="personnummer-hint" hidden></p>
+            </div>
+            <div class="kundregister-actions">
+              <button type="button" class="btn-cancel btn--compact" id="cancel-contact-btn">
+                Avbryt
+              </button>
+              <button type="submit" class="btn btn--compact btn--save" id="save-contact-btn" disabled>
+                Spara
+              </button>
+            </div>
+            <div class="kundregister-danger" id="delete-customer-zone" hidden>
+              <button type="button" class="btn-delete-customer" id="delete-customer-btn">
+                Radera kund…
+              </button>
+            </div>
+          </form>
+
+          <section id="journal-view" hidden>
+            <div class="journal-toolbar">
+              <h2 class="journal-customer-name" id="journal-customer-name"></h2>
+              <button type="button" class="btn btn--compact" id="new-entry-btn">Ny anteckning</button>
+            </div>
+            <div id="journal-list" class="journal-list"></div>
+            <p id="journal-empty" class="empty-state" hidden>Inga anteckningar ännu. Skapa den första ovan.</p>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <p id="app-version-footer"></p>
+      </footer>
+    </div>
+
+    <div id="unsaved-modal-backdrop" class="modal-backdrop" hidden>
+      <div
+        class="modal modal--unsaved"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="unsaved-modal-title"
+      >
+        <h2 id="unsaved-modal-title">Osparade ändringar</h2>
+        <div class="delete-warning">
+          <p>
+            Du har ändrat kunduppgifter utan att spara. Om du fortsätter
+            <strong>försvinner ändringarna</strong> och de sparade uppgifterna behålls.
+          </p>
+        </div>
+        <div class="kundregister-actions modal-actions--delete">
+          <button type="button" class="btn-cancel btn--compact" id="unsaved-modal-cancel">
+            Avbryt
+          </button>
+          <button type="button" class="btn btn--compact" id="unsaved-modal-confirm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="phone-dup-modal-backdrop" class="modal-backdrop" hidden>
+      <div
+        class="modal modal--unsaved"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="phone-dup-modal-title"
+      >
+        <h2 id="phone-dup-modal-title">Telefonnummer redan registrerat</h2>
+        <div class="delete-warning">
+          <p id="phone-dup-modal-text">
+            Telefonnumret finns redan registrerat för en annan kund.
+          </p>
+          <p>Vill du använda samma nummer ändå?</p>
+        </div>
+        <div class="kundregister-actions modal-actions--delete">
+          <button type="button" class="btn-cancel btn--compact" id="phone-dup-modal-cancel">
+            Avbryt
+          </button>
+          <button type="button" class="btn btn--compact" id="phone-dup-modal-confirm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="delete-modal-backdrop" class="modal-backdrop" hidden>
+      <div
+        class="modal modal--delete"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-modal-title"
+      >
+        <h2 id="delete-modal-title">Radera kund permanent?</h2>
+        <div class="delete-warning">
+          <p>
+            Du är på väg att radera <strong id="delete-customer-name"></strong> från systemet.
+          </p>
+          <p>
+            <strong>Alla uppgifter i kundregistret och alla anteckningar</strong> tas bort och kan
+            inte återställas.
+          </p>
+          <p class="delete-warning__legal">
+            <strong>Viktigt:</strong> Enligt GDPR och svensk lag kan antecknings- och hälsouppgifter i
+            vissa fall behöva bevaras under en viss tid. Radera endast om du är säker på att det är
+            tillåtet. Vid osäkerhet — kontakta berörd myndighet (t.ex.
+            Integritetsskyddsmyndigheten, IMY) eller juridisk rådgivning innan du fortsätter.
+          </p>
+        </div>
+        <div class="kundregister-actions modal-actions--delete">
+          <button
+            type="button"
+            class="btn-cancel btn--compact"
+            id="delete-modal-cancel"
+            tabindex="-1"
+          >
+            Avbryt
+          </button>
+          <button
+            type="button"
+            class="btn btn--compact btn--danger"
+            id="delete-modal-confirm"
+            tabindex="-1"
+          >
+            Radera
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="delete-entry-modal-backdrop" class="modal-backdrop" hidden>
+      <div
+        class="modal modal--delete"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-entry-modal-title"
+      >
+        <h2 id="delete-entry-modal-title">Radera anteckning permanent?</h2>
+        <div class="delete-warning">
+          <p>
+            Du är på väg att radera den här anteckningen.
+          </p>
+          <p>
+            Anteckningen <strong>tas bort permanent</strong> och kan inte återställas.
+          </p>
+          <p class="delete-warning__legal">
+            <strong>Viktigt:</strong> Enligt GDPR och svensk lag kan antecknings- och hälsouppgifter i
+            vissa fall behöva bevaras under en viss tid. Radera endast om du är säker på att det är
+            tillåtet. Vid osäkerhet — kontakta berörd myndighet (t.ex.
+            Integritetsskyddsmyndigheten, IMY) eller juridisk rådgivning innan du fortsätter.
+          </p>
+        </div>
+        <div class="kundregister-actions modal-actions--delete">
+          <button
+            type="button"
+            class="btn-cancel btn--compact"
+            id="delete-entry-modal-cancel"
+            tabindex="-1"
+          >
+            Avbryt
+          </button>
+          <button
+            type="button"
+            class="btn btn--compact btn--danger"
+            id="delete-entry-modal-confirm"
+            tabindex="-1"
+          >
+            Radera
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="hd-modal-backdrop" class="modal-backdrop" hidden>
+      <div
+        class="modal modal--health"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hd-modal-title"
+      >
+        <h2 id="hd-modal-title">Hälsodeklaration</h2>
+        <p class="modal-sub" id="hd-modal-sub"></p>
+        <div id="hd-modal-body" class="hd-modal-body"></div>
+        <div class="kundregister-actions modal-actions--delete" id="hd-modal-actions">
+          <button type="button" class="btn-cancel btn--compact" id="hd-modal-cancel">
+            Avbryt
+          </button>
+          <button type="button" class="btn btn--compact" id="hd-modal-save" hidden>
+            Spara
+          </button>
+          <button type="button" class="btn btn--compact" id="hd-modal-close" hidden>
+            Stäng
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-backdrop" class="modal-backdrop" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h2 id="modal-title">Ny anteckning</h2>
+        <div class="modal-date-field">
+          <label for="modal-date">Datum</label>
+          <input id="modal-date" name="datum" type="date" required />
+        </div>
+        <textarea id="modal-text" rows="5" placeholder="Skriv här…"></textarea>
+        <div class="modal-actions modal-actions--entry">
+          <button type="button" class="btn-delete-entry" id="modal-delete" hidden>
+            Radera
+          </button>
+          <div class="modal-actions__right">
+            <button type="button" class="btn-cancel" id="modal-cancel">Avbryt</button>
+            <button type="button" class="btn" id="modal-save">Spara</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/journal-page.js"></script>
+  </body>
+</html>

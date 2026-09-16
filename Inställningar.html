@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Inställningar — KundAnteckningar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/omtanken.css" />
+  </head>
+  <body>
+    <div class="wrap wrap--journal">
+      <main class="panel panel--journal">
+        <header class="journal-top">
+          <h1>Inställningar</h1>
+          <p class="journal-user">
+            <a href="Journal.html">Tillbaka till anteckningar</a>
+            <a href="#" id="logout-link">Logga ut</a>
+          </p>
+        </header>
+
+        <div class="content-frame content-frame--plain">
+          <section id="settings-hub" class="settings-hub">
+            <p class="kundregister-hint">Vad vill du göra?</p>
+            <div class="settings-hub__actions">
+              <button type="button" class="btn" id="hub-password-btn">
+                Byt lösenord
+              </button>
+              <button type="button" class="btn" id="hub-backup-btn">
+                Backup
+              </button>
+            </div>
+          </section>
+
+          <section id="password-panel" class="settings-panel" hidden>
+            <button type="button" class="settings-back" id="password-back-btn">
+              ← Tillbaka
+            </button>
+            <h2 class="settings-section-title">Byt lösenord</h2>
+            <form id="settings-form" class="kundregister-form">
+              <div class="field field--password">
+                <label for="current-password">Nuvarande lösenord</label>
+                <div class="password-input-wrap">
+                  <input
+                    id="current-password"
+                    name="current-password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    aria-label="Visa lösenord"
+                    aria-pressed="false"
+                    data-password-toggle
+                  >
+                    <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                      <path d="M1 1l22 22"></path>
+                      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field field--password">
+                <label for="new-password">Nytt lösenord</label>
+                <div class="password-input-wrap">
+                  <input
+                    id="new-password"
+                    name="new-password"
+                    type="password"
+                    autocomplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    aria-label="Visa lösenord"
+                    aria-pressed="false"
+                    data-password-toggle
+                  >
+                    <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                      <path d="M1 1l22 22"></path>
+                      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field field--password">
+                <label for="new-password-repeat">Repetera nytt lösenord</label>
+                <div class="password-input-wrap">
+                  <input
+                    id="new-password-repeat"
+                    name="new-password-repeat"
+                    type="password"
+                    autocomplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    aria-label="Visa lösenord"
+                    aria-pressed="false"
+                    data-password-toggle
+                  >
+                    <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                      <path d="M1 1l22 22"></path>
+                      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <p class="kundregister-hint" id="password-hint"></p>
+              <div id="notice" hidden></div>
+              <button class="btn btn--compact btn--save" type="submit" id="save-password-btn" disabled>
+                Spara nytt lösenord
+              </button>
+            </form>
+          </section>
+
+          <section id="backup-panel" class="settings-panel" hidden>
+            <button type="button" class="settings-back" id="backup-back-btn">
+              ← Tillbaka
+            </button>
+            <h2 class="settings-section-title">Backup</h2>
+            <p class="kundregister-hint" id="backup-last-stamp">
+              Ingen backup gjord ännu.
+            </p>
+            <p class="kundregister-hint">
+              En backup är <strong>en krypterad fil</strong> (.ka) som du sparar
+              och kan flytta själv (USB, moln, annan telefon).
+            </p>
+
+            <h3 class="settings-subheading">Skapa backup</h3>
+            <div class="kundregister-form">
+              <div class="field field--password">
+                <label for="backup-export-password">Appens lösenord</label>
+                <div class="password-input-wrap">
+                  <input
+                    id="backup-export-password"
+                    type="password"
+                    autocomplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    aria-label="Visa lösenord"
+                    aria-pressed="false"
+                    data-password-toggle
+                  >
+                    <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                      <path d="M1 1l22 22"></path>
+                      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <button type="button" class="btn btn--compact" id="backup-export-btn">
+                Skapa backup-fil
+              </button>
+            </div>
+
+            <h3 class="settings-subheading">Återställ från backup</h3>
+            <p class="kundregister-hint">
+              Återställning <strong>ersätter all data</strong> på den här enheten
+              med innehållet i filen.
+            </p>
+            <div class="kundregister-form">
+              <div class="field field--password">
+                <label for="backup-import-password">Lösenord till backup-filen</label>
+                <div class="password-input-wrap">
+                  <input
+                    id="backup-import-password"
+                    type="password"
+                    autocomplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    aria-label="Visa lösenord"
+                    aria-pressed="false"
+                    data-password-toggle
+                  >
+                    <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                      <path d="M1 1l22 22"></path>
+                      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <button type="button" class="btn btn--compact" id="backup-import-btn">
+                Välj fil och återställ…
+              </button>
+            </div>
+            <div id="backup-notice" hidden></div>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <p>Lösenordet skyddar den lokala krypterade databasen.</p>
+      </footer>
+    </div>
+
+    <script type="module" src="js/settings-page.js"></script>
+  </body>
+</html>
