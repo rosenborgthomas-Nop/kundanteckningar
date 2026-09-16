@@ -7,6 +7,9 @@ import {
 } from "./auth.js";
 import { formatAppVersion } from "./app-version.js";
 import { initPasswordToggles } from "./password-toggle.js";
+import { registerServiceWorker } from "./register-sw.js";
+
+registerServiceWorker();
 
 const weekdays = [
   "söndag",
@@ -78,7 +81,7 @@ function syncUi() {
     loginTitle.textContent = "Skapa lösenord";
     submitBtn.textContent = "Skapa och öppna";
     modeSwitch.innerHTML =
-      '<p class="mode-switch__hint">Första gången <strong>i den här webbläsaren</strong>: välj ett lösenord (minst 8 tecken). Telefonen och datorn har separata lösenord/databaser.</p>';
+      '<p class="mode-switch__hint">Första gången <strong>i den här webbläsaren/telefonen</strong>: välj ett lösenord (minst 8 tecken). Data sparas krypterat lokalt här — inte i molnet. Dator och telefon har separata databaser (använd Backup för att flytta).</p>';
   } else {
     loginTitle.textContent = "Lås upp";
     submitBtn.textContent = "Lås upp";

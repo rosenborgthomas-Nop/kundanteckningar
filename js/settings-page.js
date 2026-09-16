@@ -6,6 +6,7 @@ import {
 } from "./auth.js";
 import { verifyUnlockedPassword } from "./db.js";
 import { loadAllPatients, replaceAllPatients } from "./patients.js";
+import { registerServiceWorker } from "./register-sw.js";
 import {
   buildBackupFileText,
   formatBackupStamp,
@@ -16,6 +17,8 @@ import {
   setLastBackupAt,
 } from "./backup.js";
 import { initPasswordToggles } from "./password-toggle.js";
+
+registerServiceWorker();
 
 const hub = document.getElementById("settings-hub");
 const passwordPanel = document.getElementById("password-panel");

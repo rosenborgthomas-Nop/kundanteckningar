@@ -32,7 +32,7 @@ body {
       rgba(47, 95, 92, 0.78) 0%,
       rgba(36, 72, 70, 0.82) 100%
     ),
-    url("/Bakgrundsbild.jpg");
+    url("../public/Bakgrundsbild.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

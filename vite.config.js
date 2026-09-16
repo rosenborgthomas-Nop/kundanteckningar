@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { resolve } from "path";
 
 export default defineConfig({
+  base: "./",
   root: ".",
   publicDir: "public",
   build: {
@@ -12,7 +13,7 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         login: resolve(__dirname, "Inloggning.html"),
         journal: resolve(__dirname, "Journal.html"),
-        settings: resolve(__dirname, "Inställningar.html"),
+        settings: resolve(__dirname, "Installningar.html"),
         start: resolve(__dirname, "Start.html"),
       },
     },

@@ -1,16 +1,11 @@
-# KundAnteckningar — installera på Android
+# KundAnteckningar — Android-APK (reserv)
 
-Appen är en lokal Capacitor-app med krypterad SQLite (SQLCipher). Ingen Firebase-journal.
+**Primärt arbetsflöde är PWA** — se [WORKFLOW.md](WORKFLOW.md).  
+Bygg APK bara om ni medvetet vill ha den gamla telefoninstallationen.
 
-## Version (enda rutinen)
+## Version
 
-Visas i appen som **`ååmmdd vxx`** (t.ex. `260912 v01`).
-
-**Bumpa bara när ni bygger/skickar APK** — inte under vanlig utveckling i webbläsaren.
-
-1. Redigera `js/app-version.js` (`APP_VERSION_DATE` / `APP_VERSION_SEQ`).
-2. Sätt samma text i `android/app/build.gradle` → `versionName` (och höj `versionCode`, t.ex. `26091202`).
-3. `npm run cap:sync` → bygg APK i Android Studio.
+Samma `js/app-version.js` som PWA. Vid APK-bygge: håll `android/app/build.gradle` (`versionName` / `versionCode`) i fas.
 
 ## Förutsättningar (utvecklare)
 

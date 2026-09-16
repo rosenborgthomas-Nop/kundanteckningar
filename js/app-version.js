@@ -1,15 +1,15 @@
 /**
  * Enda versionsrutinen i KundAnteckningar.
- * Format som visas i appen: ååmmdd vxx  (t.ex. 260912 v01)
+ * Format som visas i appen: ååmmdd vxx  (t.ex. 260916 v01)
  *
- * RUTIN: ändra BARA när vi ska bygga/skicka en ny APK — inte vid vanlig utveckling.
- * - Ny APK samma dag: höj APP_VERSION_SEQ (2, 3, …).
- * - Ny APK annan dag: sätt APP_VERSION_DATE till dagens ååmmdd och APP_VERSION_SEQ = 1.
- * - Om SEQ skulle bli 100: sätt till 1 (sällan om ni bara bump:ar vid APK).
+ * RUTIN vid publicering (push till GitHub Pages):
+ * 1. Bumpa APP_VERSION_DATE / APP_VERSION_SEQ här.
+ * 2. Sätt samma version i public/sw.js → CACHE_NAME (`kundanteckningar-ååmmdd-vxx`).
+ * - Samma dag: höj SEQ. Ny dag: nytt datum + SEQ = 1.
  *
- * Håll android/app/build.gradle versionName i fas med formatAppVersion() vid APK-bygge.
+ * Android-APK (reserv): håll även android/app/build.gradle i fas om ni bygger APK.
  */
-export const APP_VERSION_DATE = "260913";
+export const APP_VERSION_DATE = "260916";
 export const APP_VERSION_SEQ = 1;
 
 function normalizedSeq(seq) {

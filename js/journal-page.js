@@ -1,5 +1,8 @@
 import { formatAppVersion } from "./app-version.js";
 import { authErrorMessage, logOut, requireJournalAccess } from "./auth.js";
+import { registerServiceWorker } from "./register-sw.js";
+
+registerServiceWorker();
 import {
   formatAnswerLabel,
   HEALTH_QUESTIONS,
@@ -1711,7 +1714,7 @@ function bindEvents() {
     closeAppMenu();
     if (!(await confirmDiscardUnsavedChanges())) return;
     discardContactFormEdits();
-    window.location.href = "Inställningar.html";
+    window.location.href = "Installningar.html";
   });
 
   logoutLink.addEventListener("click", async function (event) {
