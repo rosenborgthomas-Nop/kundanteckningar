@@ -10,7 +10,7 @@
  * Android-APK (reserv): håll även android/app/build.gradle i fas om ni bygger APK.
  */
 export const APP_VERSION_DATE = "260916";
-export const APP_VERSION_SEQ = 1;
+export const APP_VERSION_SEQ = 2;
 
 function normalizedSeq(seq) {
   const n = Number(seq) || 1;
