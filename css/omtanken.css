@@ -1100,6 +1100,10 @@ footer {
   z-index: 110;
 }
 
+#hd-confirm-modal-backdrop {
+  z-index: 120;
+}
+
 .modal-backdrop[hidden] {
   display: none;
 }
