@@ -747,6 +747,9 @@ async function setActiveView(newView) {
         fillCustomerSelect();
       }
     }
+  } else {
+    // Anteckningar: lämna inte formulärstatus kvar (annars blockeras Kontaktuppgifter)
+    kundregisterScreen = "list";
   }
   updateMenuActiveState();
   syncVisibility();
@@ -1040,7 +1043,13 @@ function renderCustomerList() {
 }
 
 async function openCustomerForm(patientId) {
-  if (kundregisterScreen === "form" && selectedId === patientId) return;
+  if (
+    getActiveView() === "kundregister" &&
+    kundregisterScreen === "form" &&
+    selectedId === patientId
+  ) {
+    return;
+  }
   if (kundregisterScreen === "form" && isContactFormDirty()) {
     if (!(await confirmDiscardUnsavedChanges())) return;
     discardContactFormEdits();
