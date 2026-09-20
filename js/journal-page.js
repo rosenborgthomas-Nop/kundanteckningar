@@ -1700,18 +1700,17 @@ function renderHealthForm(options) {
   updateHealthSaveButtonState();
 }
 
-function isHealthChoiceQuestion(question) {
-  return (
-    question.type === "yesno" ||
-    question.type === "yesno_detail" ||
-    question.type === "choice"
-  );
+/** Krysfrågor som måste vara ifyllda för att Spara ska aktiveras. */
+function isRequiredHealthChoiceQuestion(question) {
+  // Blodtryck är valfritt (liksom fritextfält)
+  if (question.id === "blodtryck") return false;
+  return question.type === "yesno" || question.type === "yesno_detail";
 }
 
 function healthFormIsComplete() {
   if (!hdModalBody) return false;
   for (const question of HEALTH_QUESTIONS) {
-    if (!isHealthChoiceQuestion(question)) continue;
+    if (!isRequiredHealthChoiceQuestion(question)) continue;
     const selected = hdModalBody.querySelector(
       'input[data-hd-main="' + question.id + '"]:checked'
     );
