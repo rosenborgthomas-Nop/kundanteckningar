@@ -1691,9 +1691,38 @@ function renderHealthForm(options) {
   hdModalBody.innerHTML = parts.join("");
 
   hdModalBody.querySelectorAll("input[data-hd-main]").forEach(function (input) {
-    input.addEventListener("change", syncHealthDetailVisibility);
+    input.addEventListener("change", function () {
+      syncHealthDetailVisibility();
+      updateHealthSaveButtonState();
+    });
   });
   syncHealthDetailVisibility();
+  updateHealthSaveButtonState();
+}
+
+function isHealthChoiceQuestion(question) {
+  return (
+    question.type === "yesno" ||
+    question.type === "yesno_detail" ||
+    question.type === "choice"
+  );
+}
+
+function healthFormIsComplete() {
+  if (!hdModalBody) return false;
+  for (const question of HEALTH_QUESTIONS) {
+    if (!isHealthChoiceQuestion(question)) continue;
+    const selected = hdModalBody.querySelector(
+      'input[data-hd-main="' + question.id + '"]:checked'
+    );
+    if (!selected) return false;
+  }
+  return true;
+}
+
+function updateHealthSaveButtonState() {
+  if (!hdModalSave || hdModalSave.hidden) return;
+  hdModalSave.disabled = !healthFormIsComplete();
 }
 
 function syncHealthDetailVisibility() {
@@ -1745,12 +1774,32 @@ async function saveHealthDeclaration() {
   if (saving) return;
   const patient = getSelectedPatient();
   if (!patient || !isSavedCustomer(patient)) return;
+  if (!healthFormIsComplete()) {
+    updateHealthSaveButtonState();
+    return;
+  }
 
-  patient.healthDeclaration = readHealthForm();
-  closeHealthModal();
-  await persistPatient(patient);
-  showLoadNotice("Hälsodeklaration sparad.");
-  setTimeout(() => showLoadNotice(""), 2500);
+  const ok = window.confirm(
+    "Spara hälsodeklarationen?\n\n" +
+      "Du kan inte komplettera den i efterhand.\n" +
+      "Däremot kan du byta ut hela deklarationen senare via Skriv om."
+  );
+  if (!ok) return;
+
+  saving = true;
+  hdModalSave.disabled = true;
+  try {
+    patient.healthDeclaration = readHealthForm();
+    closeHealthModal();
+    await persistPatient(patient);
+    showLoadNotice("Hälsodeklaration sparad.");
+    setTimeout(() => showLoadNotice(""), 2500);
+  } catch (error) {
+    showLoadNotice("Kunde inte spara: " + authErrorMessage(error), true);
+    updateHealthSaveButtonState();
+  } finally {
+    saving = false;
+  }
 }
 
 function startHealthRewrite() {

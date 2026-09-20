@@ -812,7 +812,8 @@ footer {
   margin-bottom: 0;
 }
 
-.btn--save:disabled {
+.btn--save:disabled,
+.btn:disabled {
   opacity: 0.28;
   cursor: not-allowed;
 }
