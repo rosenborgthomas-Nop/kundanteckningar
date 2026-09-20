@@ -203,6 +203,32 @@
       </div>
     </div>
 
+    <div id="hd-confirm-modal-backdrop" class="modal-backdrop" hidden>
+      <div
+        class="modal modal--unsaved"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="hd-confirm-modal-title"
+      >
+        <h2 id="hd-confirm-modal-title">Spara hälsodeklarationen?</h2>
+        <div class="delete-warning" id="hd-confirm-modal-body">
+          <p>Du kan inte komplettera den i efterhand.</p>
+          <p>
+            Däremot kan du byta ut hela deklarationen senare via
+            <strong>Skriv om</strong>.
+          </p>
+        </div>
+        <div class="kundregister-actions modal-actions--delete">
+          <button type="button" class="btn-cancel btn--compact" id="hd-confirm-modal-cancel">
+            Avbryt
+          </button>
+          <button type="button" class="btn btn--compact" id="hd-confirm-modal-confirm">
+            Spara
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div id="delete-modal-backdrop" class="modal-backdrop" hidden>
       <div
         class="modal modal--delete"

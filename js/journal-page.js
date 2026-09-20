@@ -57,6 +57,11 @@ const phoneDupModalBackdrop = document.getElementById("phone-dup-modal-backdrop"
 const phoneDupModalText = document.getElementById("phone-dup-modal-text");
 const phoneDupModalCancel = document.getElementById("phone-dup-modal-cancel");
 const phoneDupModalConfirm = document.getElementById("phone-dup-modal-confirm");
+const hdConfirmModalBackdrop = document.getElementById("hd-confirm-modal-backdrop");
+const hdConfirmModalTitle = document.getElementById("hd-confirm-modal-title");
+const hdConfirmModalBody = document.getElementById("hd-confirm-modal-body");
+const hdConfirmModalCancel = document.getElementById("hd-confirm-modal-cancel");
+const hdConfirmModalConfirm = document.getElementById("hd-confirm-modal-confirm");
 const hdToolbar = document.getElementById("hd-toolbar");
 const hdBtn = document.getElementById("hd-btn");
 const openKundregisterBtn = document.getElementById("open-kundregister-btn");
@@ -97,6 +102,7 @@ let currentView = "kundregister";
 let kundregisterScreen = "list";
 let unsavedConfirmResolve = null;
 let phoneDupConfirmResolve = null;
+let hdConfirmResolve = null;
 
 function normalizeContact(contact) {
   const rawMobil =
@@ -186,6 +192,30 @@ function closePhoneDupModal(confirmed) {
   if (phoneDupConfirmResolve) {
     phoneDupConfirmResolve(confirmed);
     phoneDupConfirmResolve = null;
+  }
+}
+
+function confirmHealthDialog(options) {
+  return new Promise((resolve) => {
+    hdConfirmResolve = resolve;
+    if (hdConfirmModalTitle) {
+      hdConfirmModalTitle.textContent = options.title || "Bekräfta";
+    }
+    if (hdConfirmModalBody) {
+      hdConfirmModalBody.innerHTML = options.bodyHtml || "";
+    }
+    if (hdConfirmModalConfirm) {
+      hdConfirmModalConfirm.textContent = options.confirmLabel || "OK";
+    }
+    if (hdConfirmModalBackdrop) hdConfirmModalBackdrop.hidden = false;
+  });
+}
+
+function closeHealthConfirmModal(confirmed) {
+  if (hdConfirmModalBackdrop) hdConfirmModalBackdrop.hidden = true;
+  if (hdConfirmResolve) {
+    hdConfirmResolve(confirmed);
+    hdConfirmResolve = null;
   }
 }
 
@@ -1778,11 +1808,13 @@ async function saveHealthDeclaration() {
     return;
   }
 
-  const ok = window.confirm(
-    "Spara hälsodeklarationen?\n\n" +
-      "Du kan inte komplettera den i efterhand.\n" +
-      "Däremot kan du byta ut hela deklarationen senare via Skriv om."
-  );
+  const ok = await confirmHealthDialog({
+    title: "Spara hälsodeklarationen?",
+    confirmLabel: "Spara",
+    bodyHtml:
+      "<p>Du kan inte komplettera den i efterhand.</p>" +
+      "<p>Däremot kan du byta ut hela deklarationen senare via <strong>Skriv om</strong>.</p>",
+  });
   if (!ok) return;
 
   saving = true;
@@ -1801,12 +1833,16 @@ async function saveHealthDeclaration() {
   }
 }
 
-function startHealthRewrite() {
+async function startHealthRewrite() {
   const patient = getSelectedPatient();
   if (!patient || !isSavedCustomer(patient)) return;
-  const ok = window.confirm(
-    "Skriv om hälsodeklarationen?\n\nDu fyller i allt på nytt. När du sparar ersätts den gamla deklarationen helt."
-  );
+  const ok = await confirmHealthDialog({
+    title: "Skriv om hälsodeklarationen?",
+    confirmLabel: "Skriv om",
+    bodyHtml:
+      "<p>Du fyller i allt på nytt.</p>" +
+      "<p>När du sparar <strong>ersätts den gamla deklarationen helt</strong>.</p>",
+  });
   if (!ok) return;
   renderHealthForm({ rewriting: true });
 }
@@ -1924,6 +1960,22 @@ function bindEvents() {
   if (phoneDupModalConfirm) {
     phoneDupModalConfirm.addEventListener("click", function () {
       closePhoneDupModal(true);
+    });
+  }
+
+  if (hdConfirmModalCancel) {
+    hdConfirmModalCancel.addEventListener("click", function () {
+      closeHealthConfirmModal(false);
+    });
+  }
+  if (hdConfirmModalConfirm) {
+    hdConfirmModalConfirm.addEventListener("click", function () {
+      closeHealthConfirmModal(true);
+    });
+  }
+  if (hdConfirmModalBackdrop) {
+    hdConfirmModalBackdrop.addEventListener("click", function (event) {
+      if (event.target === hdConfirmModalBackdrop) closeHealthConfirmModal(false);
     });
   }
 
