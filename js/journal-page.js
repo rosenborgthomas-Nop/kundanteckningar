@@ -81,7 +81,6 @@ const contactFields = [
   "field-mobil",
   "field-yrke",
   "field-epost",
-  "field-personnummer",
 ];
 
 let patients = [];
@@ -215,7 +214,6 @@ function updateSaveButtonState() {
   saveContactBtn.disabled = !contactFormCanSave();
   updateNamnHint();
   updateMobilHint();
-  updatePersonnummerHint();
   updateFieldInvalidStyles();
 }
 
@@ -349,13 +347,8 @@ function setFieldInvalid(input, invalid) {
 function updateFieldInvalidStyles() {
   const namn = document.getElementById("field-namn");
   const mobil = document.getElementById("field-mobil");
-  const pnr = document.getElementById("field-personnummer");
   setFieldInvalid(namn, Boolean(namnHintMessage(namn && namn.value)));
   setFieldInvalid(mobil, Boolean(mobilFormatHintMessage(mobil && mobil.value)));
-  setFieldInvalid(
-    pnr,
-    Boolean(personnummerHintMessage(pnr && pnr.value))
-  );
 }
 
 /**
@@ -427,36 +420,6 @@ function isValidPersonnummer(raw) {
   const trimmed = String(raw || "").trim();
   if (!trimmed) return true; // valfritt
   return Boolean(formatPersonnummer(trimmed));
-}
-
-function personnummerHintMessage(raw) {
-  const trimmed = String(raw || "").trim();
-  if (!trimmed) return "";
-  const digits = personnummerDigits(trimmed);
-  if (digits.length < 10) {
-    return "Personnummer behöver 10 eller 12 siffror (ååååmmdd-xxxx).";
-  }
-  if (digits.length === 11 || digits.length > 12) {
-    return "Fel antal siffror i personnumret.";
-  }
-  if (!formatPersonnummer(trimmed)) {
-    return "Personnumret kan inte stämma (datum eller kontrollsiffra).";
-  }
-  return "";
-}
-
-function updatePersonnummerHint() {
-  const hint = document.getElementById("personnummer-hint");
-  const input = document.getElementById("field-personnummer");
-  if (!hint || !input) return;
-  const message = personnummerHintMessage(input.value);
-  if (!message) {
-    hint.hidden = true;
-    hint.textContent = "";
-    return;
-  }
-  hint.hidden = false;
-  hint.textContent = message;
 }
 
 function formatDate(iso) {
@@ -863,8 +826,10 @@ function updateContextNavButtons(showForm, showNotes) {
 function readContactForm() {
   const mobilRaw = document.getElementById("field-mobil").value;
   const mobilFormatted = formatSwedishMobile(mobilRaw);
-  const pnrRaw = document.getElementById("field-personnummer").value;
-  const pnrFormatted = formatPersonnummer(pnrRaw);
+  const existing = getSelectedPatient();
+  const existingPnr = existing && existing.contact
+    ? String(existing.contact.personnummer || "").trim()
+    : "";
   return {
     namn: document.getElementById("field-namn").value,
     fodelsedata: formatBirthDateInput(
@@ -874,7 +839,8 @@ function readContactForm() {
     mobil: mobilFormatted || mobilRaw.trim(),
     yrke: document.getElementById("field-yrke").value,
     epost: document.getElementById("field-epost").value,
-    personnummer: pnrFormatted || pnrRaw.trim(),
+    // Fältet är borttaget ur UI — behåll ev. gammalt värde orört i databasen
+    personnummer: existingPnr,
   };
 }
 
@@ -888,8 +854,6 @@ function writeContactForm(contact) {
   document.getElementById("field-mobil").value = normalized.mobil || "";
   document.getElementById("field-yrke").value = normalized.yrke || "";
   document.getElementById("field-epost").value = normalized.epost || "";
-  document.getElementById("field-personnummer").value =
-    normalized.personnummer || "";
   updateSaveButtonState();
   markContactFormSaved(normalized);
 }
@@ -934,19 +898,6 @@ async function saveContact(event) {
   contact.mobil = formatSwedishMobile(contact.mobil);
   document.getElementById("field-mobil").value = contact.mobil;
 
-  if (!isValidPersonnummer(contact.personnummer)) {
-    showLoadNotice(
-      "Kontrollera personnumret (ååååmmdd-xxxx).",
-      true
-    );
-    updatePersonnummerHint();
-    updateFieldInvalidStyles();
-    return;
-  }
-  const formattedPnr = formatPersonnummer(contact.personnummer);
-  contact.personnummer = formattedPnr || "";
-  document.getElementById("field-personnummer").value = contact.personnummer;
-
   const namn = contact.namn.trim();
 
   if (findDuplicateName(namn, patient.id)) {
@@ -960,6 +911,8 @@ async function saveContact(event) {
     if (!ok) return;
   }
 
+  // Behåll personnummer om det redan fanns (fältet finns inte i UI längre)
+  contact.personnummer = String(patient.contact.personnummer || "").trim();
   patient.contact = contact;
   await persistPatient(patient);
   fillCustomerSelect(patient.id);
@@ -1862,10 +1815,6 @@ function bindEvents() {
   contactFields.forEach(function (fieldId) {
     const el = document.getElementById(fieldId);
     el.addEventListener("input", function () {
-      if (fieldId === "field-personnummer") {
-        const digits = el.value.replace(/\D/g, "").slice(0, 12);
-        el.value = digits;
-      }
       updateSaveButtonState();
     });
     if (fieldId === "field-fodelsedata") {
@@ -1880,15 +1829,6 @@ function bindEvents() {
     if (fieldId === "field-mobil") {
       el.addEventListener("blur", function () {
         const formatted = formatSwedishMobile(el.value);
-        if (formatted) {
-          el.value = formatted;
-        }
-        updateSaveButtonState();
-      });
-    }
-    if (fieldId === "field-personnummer") {
-      el.addEventListener("blur", function () {
-        const formatted = formatPersonnummer(el.value);
         if (formatted) {
           el.value = formatted;
         }
