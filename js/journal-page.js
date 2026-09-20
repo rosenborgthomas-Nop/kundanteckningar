@@ -69,6 +69,7 @@ const hdModalBody = document.getElementById("hd-modal-body");
 const hdModalCancel = document.getElementById("hd-modal-cancel");
 const hdModalSave = document.getElementById("hd-modal-save");
 const hdModalClose = document.getElementById("hd-modal-close");
+const hdModalReplace = document.getElementById("hd-modal-replace");
 const menuToggle = document.getElementById("menu-toggle");
 const appMenu = document.getElementById("app-menu");
 const appViewTitle = document.getElementById("app-view-title");
@@ -1173,11 +1174,22 @@ function bindCustomerRowTriggers(element, patientId) {
 
 function bindEntryOpenTrigger(element, entryId, textEl, fullText, previewText) {
   let clickTimer = null;
+  let longPressTimer = null;
+  let longPressFired = false;
+  let startX = 0;
+  let startY = 0;
 
   function clearClickTimer() {
     if (clickTimer) {
       clearTimeout(clickTimer);
       clickTimer = null;
+    }
+  }
+
+  function clearLongPress() {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
     }
   }
 
@@ -1192,13 +1204,21 @@ function bindEntryOpenTrigger(element, entryId, textEl, fullText, previewText) {
       const otherText = el.querySelector(".journal-entry__text");
       const otherPreview = el.dataset.preview || "";
       if (otherText) otherText.textContent = otherPreview;
+      const otherActions = el.querySelector(".journal-entry__actions");
+      if (otherActions) otherActions.hidden = true;
     });
 
     block.classList.toggle("is-expanded", willExpand);
     textEl.textContent = willExpand ? fullText : previewText;
+    const actions = block.querySelector(".journal-entry__actions");
+    if (actions) actions.hidden = !willExpand;
   }
 
   element.addEventListener("click", function () {
+    if (longPressFired) {
+      longPressFired = false;
+      return;
+    }
     clearClickTimer();
     clickTimer = setTimeout(function () {
       clickTimer = null;
@@ -1210,6 +1230,46 @@ function bindEntryOpenTrigger(element, entryId, textEl, fullText, previewText) {
     event.preventDefault();
     clearClickTimer();
     openEditModal(entryId);
+  });
+
+  element.addEventListener(
+    "touchstart",
+    function (event) {
+      if (event.touches.length !== 1) return;
+      longPressFired = false;
+      const touch = event.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      clearLongPress();
+      longPressTimer = setTimeout(function () {
+        longPressTimer = null;
+        longPressFired = true;
+        clearClickTimer();
+        openEditModal(entryId);
+      }, LONG_PRESS_MS);
+    },
+    { passive: true }
+  );
+
+  element.addEventListener(
+    "touchmove",
+    function (event) {
+      if (!longPressTimer || event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      if (
+        Math.hypot(touch.clientX - startX, touch.clientY - startY) >
+        LONG_PRESS_MOVE_PX
+      ) {
+        clearLongPress();
+      }
+    },
+    { passive: true }
+  );
+
+  element.addEventListener("touchend", clearLongPress, { passive: true });
+  element.addEventListener("touchcancel", clearLongPress, { passive: true });
+  element.addEventListener("contextmenu", function (event) {
+    if (longPressFired) event.preventDefault();
   });
 }
 
@@ -1263,7 +1323,33 @@ function renderJournal() {
     original.appendChild(textEl);
     bindEntryOpenTrigger(original, entry.id, textEl, fullText, previewText);
 
+    const actions = document.createElement("div");
+    actions.className = "journal-entry__actions";
+    actions.hidden = true;
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "text-link";
+    editBtn.textContent = "Redigera";
+    editBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      openEditModal(entry.id);
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.className = "btn-delete-entry";
+    deleteBtn.textContent = "Radera";
+    deleteBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      requestDeleteEntry(entry.id);
+    });
+
+    actions.appendChild(editBtn);
+    actions.appendChild(deleteBtn);
+
     block.appendChild(original);
+    block.appendChild(actions);
     journalList.appendChild(block);
   }
 }
@@ -1381,6 +1467,13 @@ async function deleteCurrentEntry() {
   deleteEntryModalBackdrop.hidden = false;
 }
 
+function requestDeleteEntry(entryId) {
+  if (!entryId) return;
+  modalMode = "edit";
+  modalEntryId = entryId;
+  deleteEntryModalBackdrop.hidden = false;
+}
+
 function closeDeleteEntryModal() {
   deleteEntryModalBackdrop.hidden = true;
 }
@@ -1494,6 +1587,7 @@ function renderHealthView(declaration) {
   hdModalCancel.hidden = true;
   hdModalSave.hidden = true;
   hdModalClose.hidden = false;
+  if (hdModalReplace) hdModalReplace.hidden = false;
 
   const parts = ['<p class="hd-view-meta">Uppgifter från formuläret (ej juridisk blankett).</p>'];
   for (const question of HEALTH_QUESTIONS) {
@@ -1529,12 +1623,16 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;");
 }
 
-function renderHealthForm() {
-  hdModalTitle.textContent = "Hälsodeklaration";
-  hdModalSub.textContent = "Fyll i för den här kunden. Inga kontaktfält — de finns i kundregistret.";
+function renderHealthForm(options) {
+  const rewriting = Boolean(options && options.rewriting);
+  hdModalTitle.textContent = rewriting ? "Skriv om hälsodeklaration" : "Hälsodeklaration";
+  hdModalSub.textContent = rewriting
+    ? "Fyll i hela deklarationen på nytt. När du sparar ersätts den gamla helt (allt eller inget)."
+    : "Fyll i för den här kunden. Inga kontaktfält — de finns i kundregistret.";
   hdModalCancel.hidden = false;
   hdModalSave.hidden = false;
   hdModalClose.hidden = true;
+  if (hdModalReplace) hdModalReplace.hidden = true;
 
   const parts = [];
   for (const question of HEALTH_QUESTIONS) {
@@ -1702,6 +1800,16 @@ async function saveHealthDeclaration() {
   setTimeout(() => showLoadNotice(""), 2500);
 }
 
+function startHealthRewrite() {
+  const patient = getSelectedPatient();
+  if (!patient || !isSavedCustomer(patient)) return;
+  const ok = window.confirm(
+    "Skriv om hälsodeklarationen?\n\nDu fyller i allt på nytt. När du sparar ersätts den gamla deklarationen helt."
+  );
+  if (!ok) return;
+  renderHealthForm({ rewriting: true });
+}
+
 function bindEvents() {
   if (menuToggle) {
     menuToggle.addEventListener("click", function (event) {
@@ -1851,6 +1959,9 @@ function bindEvents() {
   hdModalCancel.addEventListener("click", closeHealthModal);
   hdModalClose.addEventListener("click", closeHealthModal);
   hdModalSave.addEventListener("click", saveHealthDeclaration);
+  if (hdModalReplace) {
+    hdModalReplace.addEventListener("click", startHealthRewrite);
+  }
   hdModalBackdrop.addEventListener("click", function (event) {
     if (event.target === hdModalBackdrop) closeHealthModal();
   });

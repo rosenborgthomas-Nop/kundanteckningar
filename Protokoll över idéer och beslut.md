@@ -258,6 +258,8 @@ Under: radioknappar **Kundregister** | **Journal** för vald kund.
 | 2026-09-13 | **Städning** | Firebase-rester borttagna ur KundAnteckningar-mappen (`firebase.json`, `.firebaserc`, `firestore.rules`, `firebase-setup.txt`, `js/firebase-*`, `js/access.js`). Reservåtkomst-UI borttaget. Bokningsprojektet i Firebase Console orört. |
 | 2026-09-13 | **Beslut** | **Backup:** engångsfil `.ka` (AES-GCM). Inställningar → val **Byt lösenord** / **Backup**. Skapa med app-lösenord; återställ ersätter lokal data. Appen sparar **senaste backup-tid**. Användaren flyttar filen själv. |
 | 2026-09-16 | **Beslut** | **PWA primär leverans** (som nopEKONOMI): GitHub Pages + service worker. Repo **public** (kod synlig; kunddata krypterad lokalt i webbläsaren). Version bump i `js/app-version.js` + `public/sw.js` CACHE_NAME, sedan push. Android-APK sekundär/reserv. Se `WORKFLOW.md`. Inställningar-fil: `Installningar.html` (ASCII-URL). |
+| 2026-09-21 | **Beslut** | **Hälsodeklaration — skriv om:** sparad deklaration kan **ersättas helt** via knappen **Skriv om** (allt eller inget; ingen delfield-redigering). |
+| 2026-09-21 | **Beslut** | **Radera enstaka anteckning:** synliga knappar **Redigera** / **Radera** när anteckningen är utfälld; även håll inne → redigera (där Radera finns). |
 | 2026-08-28 | **Hälsodeklaration — frågeformulär** | **Delvis klart 2026-09-05** — formulär i app; fil/foto/ersätt kvar. |
 | 2026-08-28 | **Länk från omtankenhbg.se** | När systemet är färdigt och publicerat. |
 
