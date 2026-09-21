@@ -139,7 +139,12 @@
 
           <section id="journal-view" hidden>
             <div class="journal-toolbar">
-              <h2 class="journal-customer-name" id="journal-customer-name"></h2>
+              <div class="journal-toolbar__customer">
+                <h2 class="journal-customer-name" id="journal-customer-name"></h2>
+                <p class="journal-hd-reminder" id="journal-hd-reminder" hidden>
+                  Påminnelse: hälsodeklarationen är äldre än 12 månader. Du kan skriva om den om du vill.
+                </p>
+              </div>
               <button type="button" class="btn btn--compact" id="new-entry-btn">Ny anteckning</button>
             </div>
             <div id="journal-list" class="journal-list"></div>

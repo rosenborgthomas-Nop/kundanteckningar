@@ -811,17 +811,21 @@ function syncVisibility() {
         journalCustomerName.textContent = customerLabel(patient);
         journalCustomerName.hidden = false;
       }
+      updateJournalHealthReminder(patient);
       renderJournal();
     } else {
       if (journalCustomerName) {
         journalCustomerName.textContent = "";
         journalCustomerName.hidden = true;
       }
+      updateJournalHealthReminder(null);
       journalList.innerHTML = "";
       journalEmpty.hidden = false;
       journalEmpty.textContent =
         "Välj en kund via kundregistret (dubbelklick eller håll inne) för att se anteckningar.";
     }
+  } else {
+    updateJournalHealthReminder(null);
   }
 
   if (showForm && hasCustomer) {
@@ -1574,6 +1578,16 @@ function escapeHtml(text) {
 
 function numberedHealthLabel(question, index) {
   return String(index + 1) + ". " + question.label;
+}
+
+function updateJournalHealthReminder(patient) {
+  if (!journalHdReminder) return;
+  const declaration = patient
+    ? normalizeHealthDeclaration(patient.healthDeclaration)
+    : null;
+  const show =
+    Boolean(declaration) && isHealthDeclarationOlderThanMonths(declaration, 12);
+  journalHdReminder.hidden = !show;
 }
 
 function renderHealthView(declaration) {

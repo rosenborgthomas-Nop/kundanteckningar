@@ -913,16 +913,19 @@ footer {
 .journal-toolbar {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 14px;
 }
 
-.journal-customer-name {
-  margin: 0;
+.journal-toolbar__customer {
   flex: 1 1 auto;
   min-width: 0;
+}
+
+.journal-customer-name {
+  margin: 0;
   font-family: "Playfair Display", Georgia, serif;
   font-weight: 600;
   font-size: 1.35rem;
@@ -931,6 +934,18 @@ footer {
 }
 
 .journal-customer-name[hidden] {
+  display: none !important;
+}
+
+.journal-hd-reminder {
+  margin: 6px 0 0;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--teal-deep);
+  font-style: italic;
+}
+
+.journal-hd-reminder[hidden] {
   display: none !important;
 }
 
