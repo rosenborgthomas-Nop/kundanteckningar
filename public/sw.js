@@ -1,5 +1,5 @@
 /* Bumpa CACHE_NAME tillsammans med js/app-version.js vid varje publicering. */
-const CACHE_NAME = "kundanteckningar-260921-v07";
+const CACHE_NAME = "kundanteckningar-260921-v08";
 
 const PRECACHE = [
   "./",

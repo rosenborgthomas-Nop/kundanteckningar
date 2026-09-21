@@ -71,7 +71,7 @@ export const HEALTH_QUESTIONS = [
   },
   {
     id: "behandling",
-    label: "Pågående behandling",
+    label: "Genomgår du behandling av läkare, sjukgymnast eller av annan?",
     type: "yesno",
   },
   {
