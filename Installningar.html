@@ -152,10 +152,28 @@
             <p class="kundregister-hint" id="backup-last-stamp">
               Ingen backup gjord ännu.
             </p>
-            <p class="kundregister-hint">
-              En backup är <strong>en krypterad fil</strong> (.ka) som du sparar
-              och kan flytta själv (USB, moln, annan telefon).
-            </p>
+
+            <div class="backup-help">
+              <p class="backup-help__lead">
+                En backup är en <strong>skyddad fil</strong> (.ka) med dina kunder.
+                Programmet lägger den <strong>inte</strong> i OneDrive själv —
+                du sparar filen och lägger den där.
+              </p>
+
+              <h3 class="settings-subheading">Så sparar du i OneDrive</h3>
+              <ol class="backup-help__steps">
+                <li>Skriv in lösenordet nedan.</li>
+                <li>Tryck på <strong>Skapa backup-fil</strong>.</li>
+                <li>Telefonen/datorn laddar ner en fil (namnet börjar med <code>backup-</code>).</li>
+                <li>Öppna <strong>OneDrive</strong> (appen eller webben).</li>
+                <li>Gå till mappen där du vill spara (t.ex. Dokument).</li>
+                <li>Ladda upp / flytta dit filen du just fick.</li>
+                <li>Klart. Filen ligger nu säkert i OneDrive.</li>
+              </ol>
+              <p class="kundregister-hint">
+                Tips: Gör gärna backup då och då — t.ex. en gång i månaden.
+              </p>
+            </div>
 
             <h3 class="settings-subheading">Skapa backup</h3>
             <div class="kundregister-form">
@@ -193,9 +211,15 @@
             </div>
 
             <h3 class="settings-subheading">Återställ från backup</h3>
+            <ol class="backup-help__steps">
+              <li>Hämta din <code>.ka</code>-fil från OneDrive till telefonen/datorn.</li>
+              <li>Skriv in samma lösenord som när filen skapades.</li>
+              <li>Tryck på <strong>Välj backup-fil och återställ</strong>.</li>
+              <li>Välj filen.</li>
+              <li>Bekräfta. Allt på den här enheten byts ut mot backupen.</li>
+            </ol>
             <p class="kundregister-hint">
-              Återställning <strong>ersätter all data</strong> på den här enheten
-              med innehållet i filen.
+              Viktigt: återställning <strong>ersätter all data</strong> här med innehållet i filen.
             </p>
             <div class="kundregister-form">
               <div class="field field--password">
