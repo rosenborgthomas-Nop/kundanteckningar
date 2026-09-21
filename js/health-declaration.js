@@ -100,6 +100,13 @@ export const HEALTH_QUESTIONS = [
     detailWhen: "ja",
   },
   {
+    id: "comment",
+    label: "Kommentar",
+    type: "comment",
+    rows: 3,
+    placeholder: "Valfritt",
+  },
+  {
     id: "annat",
     label: "Annat att tillägga",
     type: "textarea",
@@ -111,6 +118,7 @@ export const HEALTH_QUESTIONS = [
 export function emptyHealthAnswers() {
   const answers = {};
   for (const q of HEALTH_QUESTIONS) {
+    if (q.type === "comment") continue;
     answers[q.id] = "";
     if (q.detailId) answers[q.detailId] = "";
   }
@@ -136,6 +144,17 @@ export function normalizeHealthDeclaration(data) {
 
 export function hasHealthDeclaration(patient) {
   return Boolean(normalizeHealthDeclaration(patient?.healthDeclaration));
+}
+
+/** Mjuk åldersgräns: äldre än angivet antal månader. */
+export function isHealthDeclarationOlderThanMonths(declaration, months) {
+  const updatedAt = declaration && declaration.updatedAt;
+  if (!updatedAt) return false;
+  const saved = new Date(updatedAt);
+  if (Number.isNaN(saved.getTime())) return false;
+  const limit = new Date();
+  limit.setMonth(limit.getMonth() - (Number(months) || 12));
+  return saved < limit;
 }
 
 export function formatAnswerLabel(question, answers) {

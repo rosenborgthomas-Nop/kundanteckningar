@@ -1254,6 +1254,11 @@ footer {
   color: var(--ink-soft);
 }
 
+.hd-view-meta--reminder {
+  color: var(--teal-deep);
+  font-style: italic;
+}
+
 .hd-view-comment {
   margin-top: 12px;
   padding-top: 10px;

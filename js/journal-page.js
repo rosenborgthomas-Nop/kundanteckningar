@@ -8,6 +8,7 @@ import {
   HEALTH_QUESTIONS,
   emptyHealthAnswers,
   normalizeHealthDeclaration,
+  isHealthDeclarationOlderThanMonths,
 } from "./health-declaration.js";
 import {
   deletePatient,
@@ -1585,27 +1586,27 @@ function renderHealthView(declaration) {
   if (hdModalReplace) hdModalReplace.hidden = false;
 
   const parts = ['<p class="hd-view-meta">Uppgifter från formuläret (ej juridisk blankett).</p>'];
+  if (isHealthDeclarationOlderThanMonths(declaration, 12)) {
+    parts.push(
+      '<p class="hd-view-meta hd-view-meta--reminder">Påminnelse: deklarationen är äldre än 12 månader. Du kan skriva om den om du vill.</p>'
+    );
+  }
   HEALTH_QUESTIONS.forEach(function (question, index) {
+    const answerText =
+      question.type === "comment"
+        ? (declaration.comment || "").trim() || "—"
+        : formatAnswerLabel(question, declaration.answers);
     parts.push(
       '<div class="hd-view-row">' +
         '<span class="hd-view-q">' +
         escapeHtml(numberedHealthLabel(question, index)) +
         "</span>" +
         '<span class="hd-view-a">' +
-        escapeHtml(formatAnswerLabel(question, declaration.answers)) +
+        escapeHtml(answerText) +
         "</span>" +
         "</div>"
     );
   });
-
-  const comment = (declaration.comment || "").trim();
-  if (comment) {
-    parts.push(
-      '<div class="hd-view-comment"><strong>Kommentar</strong><p>' +
-        escapeHtml(comment) +
-        "</p></div>"
-    );
-  }
 
   hdModalBody.innerHTML = parts.join("");
 }
@@ -1683,14 +1684,16 @@ function renderHealthForm(options) {
         );
       }
       parts.push("</div>");
-    } else if (question.type === "text" || question.type === "textarea") {
-      const rows = question.type === "textarea" ? question.rows || 10 : 1;
-      if (question.type === "textarea") {
+    } else if (question.type === "text" || question.type === "textarea" || question.type === "comment") {
+      const rows = question.type === "text" ? 1 : question.rows || 3;
+      const isComment = question.type === "comment";
+      if (question.type === "textarea" || question.type === "comment") {
         parts.push(
           '<div class="hd-text">' +
-            '<textarea data-hd-text="' +
-            question.id +
-            '" rows="' +
+            '<textarea ' +
+            (isComment ? 'id="hd-comment" ' : "") +
+            (isComment ? 'data-hd-comment="1" ' : 'data-hd-text="' + question.id + '" ') +
+            'rows="' +
             rows +
             '" placeholder="' +
             escapeHtml(question.placeholder || "") +
@@ -1714,13 +1717,6 @@ function renderHealthForm(options) {
 
     parts.push("</div>");
   });
-
-  parts.push(
-    '<div class="hd-comment">' +
-      '<label for="hd-comment">Kommentar</label>' +
-      '<textarea id="hd-comment" rows="3" placeholder="Valfritt"></textarea>' +
-      "</div>"
-  );
 
   hdModalBody.innerHTML = parts.join("");
 
@@ -1772,7 +1768,13 @@ function syncHealthDetailVisibility() {
 
 function readHealthForm() {
   const answers = emptyHealthAnswers();
+  let comment = "";
   for (const question of HEALTH_QUESTIONS) {
+    if (question.type === "comment") {
+      const commentEl = document.getElementById("hd-comment");
+      comment = commentEl ? commentEl.value.trim() : "";
+      continue;
+    }
     if (question.type === "text" || question.type === "textarea") {
       const input = hdModalBody.querySelector('[data-hd-text="' + question.id + '"]');
       answers[question.id] = input ? input.value.trim() : "";
@@ -1795,11 +1797,10 @@ function readHealthForm() {
     }
   }
 
-  const commentEl = document.getElementById("hd-comment");
   return {
     updatedAt: new Date().toISOString(),
     answers,
-    comment: commentEl ? commentEl.value.trim() : "",
+    comment,
   };
 }
 
