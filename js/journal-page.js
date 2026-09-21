@@ -1563,6 +1563,18 @@ function openHealthModal() {
   hdModalBackdrop.hidden = false;
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function numberedHealthLabel(question, index) {
+  return String(index + 1) + ". " + question.label;
+}
+
 function renderHealthView(declaration) {
   hdModalTitle.textContent = "Hälsodeklaration";
   hdModalSub.textContent =
@@ -1573,18 +1585,18 @@ function renderHealthView(declaration) {
   if (hdModalReplace) hdModalReplace.hidden = false;
 
   const parts = ['<p class="hd-view-meta">Uppgifter från formuläret (ej juridisk blankett).</p>'];
-  for (const question of HEALTH_QUESTIONS) {
+  HEALTH_QUESTIONS.forEach(function (question, index) {
     parts.push(
       '<div class="hd-view-row">' +
         '<span class="hd-view-q">' +
-        escapeHtml(question.label) +
+        escapeHtml(numberedHealthLabel(question, index)) +
         "</span>" +
         '<span class="hd-view-a">' +
         escapeHtml(formatAnswerLabel(question, declaration.answers)) +
         "</span>" +
         "</div>"
     );
-  }
+  });
 
   const comment = (declaration.comment || "").trim();
   if (comment) {
@@ -1596,14 +1608,6 @@ function renderHealthView(declaration) {
   }
 
   hdModalBody.innerHTML = parts.join("");
-}
-
-function escapeHtml(text) {
-  return String(text)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 function renderHealthForm(options) {
@@ -1618,13 +1622,13 @@ function renderHealthForm(options) {
   if (hdModalReplace) hdModalReplace.hidden = true;
 
   const parts = [];
-  for (const question of HEALTH_QUESTIONS) {
+  HEALTH_QUESTIONS.forEach(function (question, index) {
     parts.push('<div class="hd-question" data-q="' + question.id + '">');
     parts.push(
       '<span class="hd-question__label" id="hd-label-' +
         question.id +
         '">' +
-        escapeHtml(question.label) +
+        escapeHtml(numberedHealthLabel(question, index)) +
         "</span>"
     );
 
@@ -1709,7 +1713,7 @@ function renderHealthForm(options) {
     }
 
     parts.push("</div>");
-  }
+  });
 
   parts.push(
     '<div class="hd-comment">' +
