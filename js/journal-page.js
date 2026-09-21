@@ -29,6 +29,7 @@ const journalView = document.getElementById("journal-view");
 const journalList = document.getElementById("journal-list");
 const journalEmpty = document.getElementById("journal-empty");
 const journalCustomerName = document.getElementById("journal-customer-name");
+const journalHdReminder = document.getElementById("journal-hd-reminder");
 const newEntryBtn = document.getElementById("new-entry-btn");
 const modalBackdrop = document.getElementById("modal-backdrop");
 const modalTitle = document.getElementById("modal-title");
