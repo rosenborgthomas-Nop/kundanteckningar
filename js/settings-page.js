@@ -166,6 +166,8 @@ async function refreshStorageUi() {
 
 /**
  * Bind vald mapp som originalplats.
+ * Mapphanteraren MÅSTE öppnas direkt från klicket (innan confirm/await),
+ * annars: "Must be handling a user gesture to show a file picker".
  * @param {boolean} rebind — true om redan i folder-läge och byter mapp
  */
 async function bindFolderAsOriginal(rebind) {
@@ -176,15 +178,7 @@ async function bindFolderAsOriginal(rebind) {
     return;
   }
 
-  if (!rebind) {
-    const okStart = window.confirm(
-      "Jag vill spara originalet i en mapp i fortsättningen.\n\n" +
-        "Programmet skapar filen kundanteckningar.ka i mappen du väljer " +
-        "(t.ex. en OneDrive-mapp på datorn).\n\nFortsätt?"
-    );
-    if (!okStart) return;
-  }
-
+  // Första await = showDirectoryPicker, medan klickgesten fortfarande gäller.
   let dirHandle;
   try {
     dirHandle = await pickDirectory();
@@ -192,6 +186,15 @@ async function bindFolderAsOriginal(rebind) {
     if (e && e.name === "AbortError") return;
     showStorageNotice(authErrorMessage(e));
     return;
+  }
+
+  if (!rebind) {
+    const okStart = window.confirm(
+      "Vill du spara originalet i den valda mappen i fortsättningen?\n\n" +
+        "Programmet skapar filen kundanteckningar.ka där " +
+        "(t.ex. bra om mappen synkas med OneDrive).\n\nFortsätt?"
+    );
+    if (!okStart) return;
   }
 
   const permitted = await ensureDirectoryPermission(dirHandle, "readwrite");
@@ -226,7 +229,6 @@ async function bindFolderAsOriginal(rebind) {
     await saveDirectoryHandle(dirHandle);
     await setStorageMode(MODE_FOLDER);
 
-    // Säkerställ att webbläsarvalvet speglar samma data
     try {
       const db = getDb();
       if (db && typeof db.persist === "function") {
