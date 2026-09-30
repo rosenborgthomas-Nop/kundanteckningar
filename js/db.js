@@ -9,6 +9,13 @@ import {
   SQLiteConnection,
 } from "@capacitor-community/sqlite";
 import { Preferences } from "@capacitor/preferences";
+import {
+  MODE_FOLDER,
+  clearFolderStorageSettings,
+  getStorageMode,
+  syncPatientsToFolderIfNeeded,
+  tryLoadPatientsFromFolder,
+} from "./folder-storage.js";
 
 const DB_NAME = "kundanteckningar";
 const DB_VERSION = 1;
@@ -143,6 +150,11 @@ class WebVaultDb {
       key: WEB_VAULT_KEY,
       value: JSON.stringify(vault),
     });
+    try {
+      await syncPatientsToFolderIfNeeded(this.patients, this.password);
+    } catch (_) {
+      /* Mappfilen är extra original — webbläsarvalvet är alltid sparat. */
+    }
   }
 
   async execute() {
@@ -233,6 +245,31 @@ async function createWebDatabase(password) {
 }
 
 async function unlockWebDatabase(password) {
+  const mode = await getStorageMode();
+  if (mode === MODE_FOLDER) {
+    const fromFolder = await tryLoadPatientsFromFolder(password);
+    if (fromFolder.ok) {
+      let saltB64;
+      const saltRes = await Preferences.get({ key: WEB_SALT_KEY });
+      saltB64 = saltRes.value;
+      if (!saltB64) {
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        saltB64 = bufToB64(salt.buffer);
+        await Preferences.set({ key: WEB_SALT_KEY, value: saltB64 });
+      }
+      db = new WebVaultDb(password, saltB64, fromFolder.patients);
+      await db.persist();
+      await markInitialized();
+      saveSessionPass(password);
+      unlocked = true;
+      return db;
+    }
+    if (fromFolder.reason === "bad-password") {
+      throw new Error("Fel lösenord eller skadad databas.");
+    }
+    // saknad behörighet/fil/handle → fall tillbaka till webbläsarvalvet
+  }
+
   const { value: saltB64 } = await Preferences.get({ key: WEB_SALT_KEY });
   const { value: vaultRaw } = await Preferences.get({ key: WEB_VAULT_KEY });
   if (!saltB64 || !vaultRaw) {
@@ -383,13 +420,7 @@ export async function changeDatabasePassword(currentPassword, newPassword) {
     if (!(db instanceof WebVaultDb)) {
       throw new Error("Databasen är inte upplåst.");
     }
-    // Verifiera nuvarande lösenord genom att låsa upp vault igen
-    const { value: saltB64 } = await Preferences.get({ key: WEB_SALT_KEY });
-    const { value: vaultRaw } = await Preferences.get({ key: WEB_VAULT_KEY });
-    const vault = JSON.parse(vaultRaw || "{}");
-    try {
-      await decryptPatients(String(currentPassword), saltB64, vault);
-    } catch (_) {
+    if (readSessionPass() !== String(currentPassword || "")) {
       throw new Error("Nuvarande lösenord stämmer inte.");
     }
     const patients = db.patients;
@@ -447,6 +478,7 @@ export async function wipeLocalDatabase() {
     if (isWeb()) {
       await Preferences.remove({ key: WEB_VAULT_KEY });
       await Preferences.remove({ key: WEB_SALT_KEY });
+      await clearFolderStorageSettings();
     } else {
       await ensureWebStore();
       const exists = await sqlite.isDatabase(DB_NAME);

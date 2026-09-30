@@ -34,6 +34,9 @@
               <button type="button" class="btn" id="hub-password-btn">
                 Byt lösenord
               </button>
+              <button type="button" class="btn" id="hub-storage-btn">
+                Var sparas data?
+              </button>
               <button type="button" class="btn" id="hub-backup-btn">
                 Backup
               </button>
@@ -142,6 +145,73 @@
                 Spara nytt lösenord
               </button>
             </form>
+          </section>
+
+          <section id="storage-panel" class="settings-panel" hidden>
+            <button type="button" class="settings-back" id="storage-back-btn">
+              ← Tillbaka
+            </button>
+            <h2 class="settings-section-title">Var sparas data?</h2>
+            <p class="kundregister-hint" id="storage-status"></p>
+
+            <div class="backup-help">
+              <p class="backup-help__lead">
+                Just nu sparas dina kunder i <strong>webbläsaren</strong> på den här
+                enheten. På dator (Chrome/Edge) kan du i stället välja en
+                <strong>mapp</strong> — t.ex. en OneDrive-mapp — där programmet
+                håller en krypterad fil (<code>kundanteckningar.ka</code>) som original.
+              </p>
+              <p class="kundregister-hint" id="storage-phone-note" hidden>
+                På telefon saknas oftast mapphanterare. Där fortsätter data att
+                sparas i webbläsaren. Använd datorn om du vill spara i en mapp.
+              </p>
+            </div>
+
+            <div id="storage-actions">
+              <h3 class="settings-subheading">Välj mapp</h3>
+              <ol class="backup-help__steps">
+                <li>Ange appens lösenord.</li>
+                <li>Tryck på knappen och välj mappen i mapphanteraren.</li>
+                <li>Om mappen redan har en datafil får du välja: använd den eller skriv över.</li>
+              </ol>
+              <div class="kundregister-form">
+                <div class="field field--password">
+                  <label for="storage-password">Appens lösenord</label>
+                  <div class="password-input-wrap">
+                    <input
+                      id="storage-password"
+                      type="password"
+                      autocomplete="current-password"
+                    />
+                    <button
+                      type="button"
+                      class="password-toggle"
+                      aria-label="Visa lösenord"
+                      aria-pressed="false"
+                      data-password-toggle
+                    >
+                      <svg class="password-toggle__icon password-toggle__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                      <svg class="password-toggle__icon password-toggle__icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                        <path d="M1 1l22 22"></path>
+                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <button type="button" class="btn btn--compact" id="storage-pick-btn">
+                  Välj mapp…
+                </button>
+                <button type="button" class="btn btn--compact" id="storage-rebind-btn" hidden>
+                  Byt mapp…
+                </button>
+              </div>
+            </div>
+            <div id="storage-notice" hidden></div>
           </section>
 
           <section id="backup-panel" class="settings-panel" hidden>
