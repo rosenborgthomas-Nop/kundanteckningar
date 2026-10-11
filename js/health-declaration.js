@@ -64,10 +64,7 @@ export const HEALTH_QUESTIONS = [
   {
     id: "gravid",
     label: "Gravid?",
-    type: "yesno_detail",
-    detailId: "gravidManad",
-    detailLabel: "Vilken månad?",
-    detailWhen: "ja",
+    type: "yesno",
   },
   {
     id: "behandling",
@@ -77,13 +74,11 @@ export const HEALTH_QUESTIONS = [
   {
     id: "medicin",
     label: "Regelbunden medicin",
-    type: "textarea",
-    rows: 10,
-    placeholder: "Sort och för vad",
+    type: "yesno",
   },
   {
     id: "cortison",
-    label: "Cortisoninjektioner eller tabletter",
+    label: "Kortison-, injektioner och/eller tabletter",
     type: "yesno",
   },
   {
@@ -94,23 +89,13 @@ export const HEALTH_QUESTIONS = [
   {
     id: "huvudvark",
     label: "Huvudvärk eller migrän",
-    type: "yesno_detail",
-    detailId: "huvudvarkHurOfta",
-    detailLabel: "Hur ofta?",
-    detailWhen: "ja",
+    type: "yesno",
   },
   {
     id: "comment",
     label: "Kommentar",
     type: "comment",
     rows: 3,
-    placeholder: "Valfritt",
-  },
-  {
-    id: "annat",
-    label: "Annat att tillägga",
-    type: "textarea",
-    rows: 10,
     placeholder: "Valfritt",
   },
 ];
