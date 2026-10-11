@@ -822,6 +822,16 @@ footer {
   margin-top: 28px;
   padding-top: 18px;
   border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.kundregister-danger .btn--compact {
+  width: auto;
+  min-width: 110px;
+  margin-bottom: 0;
 }
 
 .btn-delete-customer {

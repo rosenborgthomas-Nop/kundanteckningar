@@ -16,6 +16,7 @@ import {
   makeId,
   savePatient,
 } from "./patients.js";
+import { printCustomerRecord } from "./customer-print.js";
 
 const NEW_CUSTOMER = "__ny__";
 
@@ -45,6 +46,7 @@ const saveContactBtn = document.getElementById("save-contact-btn");
 const cancelContactBtn = document.getElementById("cancel-contact-btn");
 const deleteCustomerZone = document.getElementById("delete-customer-zone");
 const deleteCustomerBtn = document.getElementById("delete-customer-btn");
+const printCustomerBtn = document.getElementById("print-customer-btn");
 const deleteModalBackdrop = document.getElementById("delete-modal-backdrop");
 const deleteCustomerName = document.getElementById("delete-customer-name");
 const deleteModalCancel = document.getElementById("delete-modal-cancel");
@@ -1955,6 +1957,23 @@ function bindEvents() {
   modalDelete.addEventListener("click", deleteCurrentEntry);
 
   deleteCustomerBtn.addEventListener("click", openDeleteModal);
+  if (printCustomerBtn) {
+    printCustomerBtn.addEventListener("click", function () {
+      const patient = getSelectedPatient();
+      if (!patient || !isSavedCustomer(patient)) {
+        showLoadNotice("Spara kunden innan du skriver ut.", true);
+        return;
+      }
+      try {
+        printCustomerRecord(patient);
+      } catch (error) {
+        showLoadNotice(
+          "Kunde inte skriva ut: " + authErrorMessage(error),
+          true
+        );
+      }
+    });
+  }
   deleteModalCancel.addEventListener("click", closeDeleteModal);
   deleteModalConfirm.addEventListener("click", confirmDeleteCustomer);
   blockKeyboardOnButton(deleteModalCancel);
